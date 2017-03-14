@@ -1,4 +1,4 @@
-# Copyright © 2017, Alison C. Holland, All rights reserved. 
+# Copyright © 2015, Alison C. Holland, All rights reserved. 
 
 # match specs of webcam
 cv2Framerate = 15.0 # PAL
