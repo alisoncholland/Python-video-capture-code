@@ -6,7 +6,8 @@
 
 # ${1:Python-video-capture-code}
 
-## This Python code will capture (record) facial expressions of participants when they are exposed to emotional expressions. 
+## This Python code was created back in 2015 for a Psychophysiological project. 
+## This code will capture (record) facial expressions of participants when they are exposed to emotional expressions. 
 ## The video recordings are time stamped and recorded in .avi format. 
 
 
