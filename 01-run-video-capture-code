@@ -1,0 +1,59 @@
+# Copyright © 2017, Alison C. Holland, All rights reserved. 
+
+# match specs of webcam
+cv2Framerate = 15.0 # PAL
+cv2VideoOutputResolution =  (800, 448) # FullHD - check max camera resolution
+
+# define capture device
+cap = cv2.VideoCapture(0) 
+cap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, cv2VideoOutputResolution[0])
+cap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, cv2VideoOutputResolution[1])
+
+fps = cap.get(cv2.cv.CV_CAP_PROP_FPS)
+if fps: cv2Framerate = fps
+else: cap.set(cv2.cv.CV_CAP_PROP_FPS, cv2Framerate)
+
+# define video codec
+fourcc = cv2.cv.CV_FOURCC(*'XVID') 
+
+# get current date and time for video file name
+dateTime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M") 
+
+# ask for the ID of the test
+testID = raw_input('Please enter test ID:')
+
+# append strings to form file name
+filename = "videoCapture_" + testID + "__" + dateTime + ".avi" 
+
+# define output video file and file options - 20 frames per second, 640x480 pixels
+out = cv2.VideoWriter(filename,fourcc, 20.0, (640,480)) 
+
+# whether to show a green box in the video preview to allow people to center themselves
+showBox = True; 
+
+while(True):
+	ret, frame = cap.read() # read camera output
+	timer = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f") # get date and time for timestamp
+	
+	if ret==True: # if valid output from the camera is received...
+		font = cv2.FONT_HERSHEY_SIMPLEX # define timestamp font
+		cv2.rectangle(frame,(10,7),(260,23),(0,0,0),-1) # draw black rectangle behind timestamp
+		cv2.putText(frame,timer,(10,20), font, .5,(255,255,255),1) # write timestamp
+		
+		out.write(frame) # write frame to video file, without the green box
+		
+		if showBox==True: # show green box - can be toggled by pressing 'b'
+			cv2.rectangle(frame,(200,100),(440,380),(0,255,0),3) # draw box on frame, top left and bottom right coordinates, color, line thickness
+		cv2.imshow('frame',frame) # preview the frame with the box
+
+	if cv2.waitKey(1) & 0xFF == ord('q'): # stop recording
+		break
+	elif cv2.waitKey(1) & 0xFF == ord('b'): # toggle previewing green box
+		showBox = not showBox;
+
+# release capture device
+cap.release() 
+
+# close windows
+cv2.destroyAllWindows() 
+
