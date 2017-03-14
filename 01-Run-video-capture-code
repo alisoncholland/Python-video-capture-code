@@ -3,6 +3,7 @@
 # match specs of webcam
 cv2Framerate = 15.0 # PAL
 cv2VideoOutputResolution =  (800, 448) # FullHD - check max camera resolution
+# cv2VideoOutputResolution =  (800, 600) # set resolution
 
 # define capture device
 cap = cv2.VideoCapture(0) 
@@ -13,23 +14,20 @@ fps = cap.get(cv2.cv.CV_CAP_PROP_FPS)
 if fps: cv2Framerate = fps
 else: cap.set(cv2.cv.CV_CAP_PROP_FPS, cv2Framerate)
 
-# define video codec
-fourcc = cv2.cv.CV_FOURCC(*'XVID') 
+fourcc = cv2.cv.CV_FOURCC(*'XVID') # define video codec
 
-# get current date and time for video file name
-dateTime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M") 
+print "capture resolution:"
+print cap.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)
+print cap.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)
 
-# ask for the ID of the test
-testID = raw_input('Please enter test ID:')
+print "capture framerate:"
+print cap.get(cv2.cv.CV_CAP_PROP_FPS)
 
-# append strings to form file name
-filename = "videoCapture_" + testID + "__" + dateTime + ".avi" 
-
-# define output video file and file options - 20 frames per second, 640x480 pixels
-out = cv2.VideoWriter(filename,fourcc, 20.0, (640,480)) 
-
-# whether to show a green box in the video preview to allow people to center themselves
-showBox = True; 
+dateTime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M") # get current date and time for video file name
+testID = raw_input('Please enter test ID:') # ask for the ID of the test
+filename = "videoCapture_" + testID + "__" + dateTime + ".avi" # append strings to form file name 
+out = cv2.VideoWriter(filename,fourcc, cv2Framerate, cv2VideoOutputResolution) # define output video file and file options - 20 frames per second, 640x480 pixels
+showBox = True; # whether to show a green box in the video preview to allow people to center themselves
 
 while(True):
 	ret, frame = cap.read() # read camera output
@@ -51,9 +49,5 @@ while(True):
 	elif cv2.waitKey(1) & 0xFF == ord('b'): # toggle previewing green box
 		showBox = not showBox;
 
-# release capture device
-cap.release() 
-
-# close windows
-cv2.destroyAllWindows() 
-
+cap.release() # release capture device
+cv2.destroyAllWindows() # close windows
